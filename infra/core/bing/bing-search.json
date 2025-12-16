@@ -1,0 +1,92 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "metadata": {
+    "_generator": {
+      "name": "bicep",
+      "version": "0.39.26.7824",
+      "templateHash": "10542973537476872029"
+    },
+    "description": "Creates a Bing Search API resource."
+  },
+  "parameters": {
+    "name": {
+      "type": "string",
+      "metadata": {
+        "description": "Name of the Bing Search API resource"
+      }
+    },
+    "location": {
+      "type": "string",
+      "defaultValue": "global",
+      "metadata": {
+        "description": "Location for all resources"
+      }
+    },
+    "tags": {
+      "type": "object",
+      "defaultValue": {},
+      "metadata": {
+        "description": "Tags to apply to all resources"
+      }
+    },
+    "skuName": {
+      "type": "string",
+      "defaultValue": "S1",
+      "allowedValues": [
+        "F0",
+        "S1",
+        "S2",
+        "S3",
+        "S4",
+        "S5",
+        "S6",
+        "S7",
+        "S8",
+        "S9"
+      ],
+      "metadata": {
+        "description": "SKU name for the Bing Search API"
+      }
+    }
+  },
+  "resources": [
+    {
+      "type": "Microsoft.Bing/accounts",
+      "apiVersion": "2020-06-10",
+      "name": "[parameters('name')]",
+      "location": "[parameters('location')]",
+      "tags": "[parameters('tags')]",
+      "kind": "Bing.Search.v7",
+      "sku": {
+        "name": "[parameters('skuName')]"
+      },
+      "properties": {
+        "statisticsEnabled": false
+      }
+    }
+  ],
+  "outputs": {
+    "id": {
+      "type": "string",
+      "metadata": {
+        "description": "The resource ID of the Bing Search API"
+      },
+      "value": "[resourceId('Microsoft.Bing/accounts', parameters('name'))]"
+    },
+    "name": {
+      "type": "string",
+      "metadata": {
+        "description": "The name of the Bing Search API"
+      },
+      "value": "[parameters('name')]"
+    },
+    "endpoint": {
+      "type": "string",
+      "metadata": {
+        "description": "The endpoint URL of the Bing Search API"
+      },
+      "value": "[reference(resourceId('Microsoft.Bing/accounts', parameters('name')), '2020-06-10').endpoint]"
+    }
+  }
+}

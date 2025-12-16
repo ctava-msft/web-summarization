@@ -1,0 +1,41 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "metadata": {
+    "_generator": {
+      "name": "bicep",
+      "version": "0.39.26.7824",
+      "templateHash": "2606752543961633422"
+    }
+  },
+  "parameters": {
+    "principalID": {
+      "type": "string"
+    },
+    "roleDefinitionID": {
+      "type": "string"
+    },
+    "accountName": {
+      "type": "string"
+    }
+  },
+  "resources": [
+    {
+      "type": "Microsoft.Authorization/roleAssignments",
+      "apiVersion": "2020-04-01-preview",
+      "scope": "[format('Microsoft.CognitiveServices/accounts/{0}', parameters('accountName'))]",
+      "name": "[guid(resourceId('Microsoft.CognitiveServices/accounts', parameters('accountName')), parameters('principalID'), parameters('roleDefinitionID'))]",
+      "properties": {
+        "roleDefinitionId": "[resourceId('Microsoft.Authorization/roleDefinitions', parameters('roleDefinitionID'))]",
+        "principalId": "[parameters('principalID')]",
+        "principalType": "ServicePrincipal"
+      }
+    }
+  ],
+  "outputs": {
+    "ROLE_ASSIGNMENT_NAME": {
+      "type": "string",
+      "value": "[guid(resourceId('Microsoft.CognitiveServices/accounts', parameters('accountName')), parameters('principalID'), parameters('roleDefinitionID'))]"
+    }
+  }
+}
