@@ -1,203 +1,171 @@
 <!--
 ---
-name: Building AI Agents with Azure API Management and Model Context Protocol
-description: Build scalable AI Agents using Azure API Management as the AI Gateway for MCP Servers with Azure Functions  
+name: Web Summarization with Bing Grounding and GPT-5.2-chat
+description: Build an intelligent web research assistant using Azure AI Foundry Projects Agents with Bing Grounding
 page_type: sample
 languages:
 - python
 - bicep
 - azdeveloper
 products:
-- azure-api-management
-- azure-functions
+- azure-ai-foundry
+- azure-openai
+- bing-search
 - azure
 - ai
-urlFragment: ai-agents-apim-mcp-functions-python
+urlFragment: web-summarization-bing-gpt-python
 ---
 -->
 
-# Building AI Agents with Azure API Management and Model Context Protocol
+# Web Summarization with Bing Grounding and GPT-5.2-chat
 
-![AI Agent Architecture](mcp-client-authorization.gif)
-
-Build powerful AI Agents that can access enterprise tools and data through the **Model Context Protocol (MCP)**. This sample demonstrates how to use **Azure API Management** as an intelligent [AI Gateway](https://github.com/Azure-Samples/AI-Gateway) to create scalable, secure MCP servers that your AI agents can interact with.
+Build an intelligent web research assistant that searches the web and provides comprehensive, up-to-date summaries using **Azure AI Foundry Projects Agents** with **Bing Grounding** and **GPT-5.2-chat**.
 
 ## What You'll Build
 
 This solution enables you to:
 
-🤖 **Create AI Agent Tools**: Build custom tools that AI agents can discover and use  
-🔧 **Extend Agent Capabilities**: Give agents access to enterprise systems, databases, and APIs  
-🌐 **Scale Agent Infrastructure**: Deploy MCP servers that handle multiple concurrent agent sessions  
-🛡️ **Secure Agent Access**: Implement proper authentication and authorization for agent interactions  
+🔍 **Search the Web**: Use Bing Grounding to search for current information across the internet  
+🤖 **AI-Powered Summarization**: Leverage GPT-5.2-chat to generate comprehensive summaries  
+📚 **Citation Tracking**: Automatically capture and display source URLs from search results  
+⚡ **Streaming Responses**: Get real-time results as the AI agent processes information
 
-### Available MCP Tools
-
-The sample includes three ready-to-use agent tools:
-
-| Tool             | Purpose                  | AI Agent Use Case                                 |
-|------------------|--------------------------|---------------------------------------------------|
-| `hello_mcp`      | Simple greeting tool     | Test agent connectivity and basic tool calling    |
-| `save_snippet`   | Store code/text snippets | Let agents save information for later retrieval   |
-| `get_snippet`    | Retrieve stored snippets | Enable agents to access previously saved data     |
-
-This architecture follows the latest [MCP Authorization specification](https://modelcontextprotocol.io/specification/2025-03-26/basic/authorization#2-10-third-party-authorization-flow) and provides a [detailed sequence diagram](infra/app/apim-oauth/diagrams/diagrams.md) of the agent interaction flow.
-
-## Quick Start: Deploy Your AI Agent Backend
-
-Get your AI agent infrastructure running in minutes:
-
-1. **Register Azure Resource Provider** (one-time setup)
-    ```bash
-    # Using Azure CLI
-    az provider register --namespace Microsoft.App --wait
-    
-    # Using Azure PowerShell  
-    Register-AzResourceProvider -ProviderNamespace Microsoft.App
-    ```
-
-2. **Deploy the Complete Solution**
-    ```bash
-    azd up
-    ```
-    
-    This single command provisions:
-    - 🏗️ Azure API Management (AI Gateway)
-    - ⚡ Azure Functions (MCP Tools Runtime)  
-    - 💾 Storage Account (Agent Data Persistence)
-    - 🔐 Authentication & Authorization
-    - 📊 Monitoring & Logging
-
-## Connect Your AI Agent
-
-### Option 1: Use MCP Inspector (Interactive Testing)
-
-Perfect for development and testing your agent tools:
-
-1. **Launch MCP Inspector**
-    ```bash
-    npx @modelcontextprotocol/inspector
-    ```
-
-2. **Connect to Your Agent Backend**
-   - Open the MCP Inspector web app (e.g. http://127.0.0.1:6274/#resources)
-   - Set transport type to `SSE`
-   - Enter your APIM endpoint: `https://<your-apim-service>.azure-api.net/mcp/sse`
-   - Click **Connect**
-
-3. **Interact with Agent Tools**
-   - Click **List Tools** to see available capabilities
-   - Select any tool (e.g., `hello_mcp`) and click **Run Tool**
-   - Test agent tool responses and behavior
-
-### Option 2: Automated Testing & Integration
-
-For CI/CD and automated validation of your agent backend:
+### Example Query
 
 ```bash
-python test_mcp_fixed_session.py
+python query.py "who won the Oklahoma City thunder game on 12/2/2025?"
 ```
 
-This comprehensive test validates your AI agent infrastructure:
-- 🔗 **Agent Connectivity**: MCP session establishment via SSE
-- 🛠️ **Tool Discovery**: Agent can find available tools (`tools/list`)
-- 🚀 **Tool Execution**: Agent can successfully call tools and get responses
-- 📡 **Real-time Communication**: Streaming responses via Server-Sent Events
+The assistant will search the web using Bing, analyze the results, and provide a detailed summary with citations.
 
-**Expected Agent Test Results:**
+## Quick Start
+
+### Prerequisites
+
+- Python 3.11 or later
+- Azure subscription
+- Azure Developer CLI (`azd`)
+
+### 1. Deploy Azure Infrastructure
+
+Deploy all required Azure resources with a single command:
+
+```bash
+azd up
 ```
-🤖 AI Agent Backend Validation
-| Component             | Status          |
-|-----------------------|-----------------|
-| 🔗 Agent Session      | ✅ CONNECTED   |
-| 🛠️ Tool Discovery     | ✅ SUCCESS     |
-| 🚀 Tool Execution     | ✅ SUCCESS     |
-| 📊 Agent Backend      | 🎉 READY       |
+
+This provisions:
+- 🤖 **Azure AI Foundry Project** - AI development environment
+- 🧠 **Azure OpenAI** - GPT-5.2-chat model deployment
+- 🔍 **Bing Search API** - Web grounding capabilities
+- 📊 **Monitoring** - Application Insights and Log Analytics
+- 💾 **Storage** - Backing storage for AI Foundry
+- 🔐 **Identity** - Managed identity for secure access
+
+### 2. Install Python Dependencies
+
+```bash
+pip install -r requirements.txt
 ```
 
-📖 **Detailed Testing Guide**: See [TESTING.md](TESTING.md) for complete testing instructions, troubleshooting, and integration examples.  
+Required packages:
+- `azure-ai-projects` - Azure AI Foundry SDK
+- `azure-identity` - Azure authentication
+- `python-dotenv` - Environment configuration
+- `openai` - OpenAI API client
+
+### 3. Run Your First Query
+
+```bash
+# Use the default query
+python query.py
+
+# Or provide your own
+python query.py "what are the latest developments in AI?"
+```
+
+**Sample Output:**
+```
+================================================================================
+Web Summarization with Bing Grounding and GPT-5.2-chat
+================================================================================
+Query: who won the Oklahoma City thunder game on 12/2/2025?
+================================================================================
+
+Agent is researching...
+The Oklahoma City Thunder defeated the New Orleans Pelicans 119-109...
+
+Citations:
+  - https://www.espn.com/...
+  - https://www.nba.com/...
+
+✅ Processing complete!
+```  
 
 
-## AI Agent Architecture Overview
+## How It Works
 
-This solution creates a scalable, enterprise-ready backend for AI agents using the Model Context Protocol (MCP). Azure API Management acts as an intelligent AI Gateway that enables agents to discover, authenticate with, and execute tools across your organization.
+This solution uses **Azure AI Foundry Projects Agents** with the **Bing Grounding** tool to create an intelligent web research assistant.
 
-![AI Agent Architecture](overview.png)
-
-### How AI Agents Interact with Your Backend
+### Architecture Overview
 
 ```mermaid
-graph TB
-    A[🤖 AI Agent] --> B[🌐 Azure API Management<br/>AI Gateway]
-    B --> C[⚡ Azure Functions<br/>MCP Tools Runtime]
-    C --> D[💾 Azure Storage<br/>Agent Data]
-    C --> E[🔧 Your Enterprise APIs<br/>Databases, Services]
-    
-    B --> F[🔐 Authentication<br/>OAuth 2.0 + PKCE]
-    B --> G[📊 Monitoring<br/>Agent Usage Analytics]
+graph LR
+    A[Your Query] --> B[AI Agent]
+    B --> C[Bing Grounding Tool]
+    C --> D[Bing Search API]
+    D --> C
+    C --> B
+    B --> E[GPT-5.2-chat]
+    E --> F[Summary + Citations]
 ```
 
-**Agent Interaction Flow:**
-1. 🤖 **Agent Discovery**: AI agent connects to your MCP server endpoint
-2. 🔍 **Tool Discovery**: Agent queries available tools (`tools/list`)
-3. 🚀 **Tool Execution**: Agent calls specific tools with parameters (`tools/call`)
-4. 📡 **Real-time Responses**: Agent receives results via streaming responses
-5. 🧠 **Agent Learning**: Agent incorporates tool results into its reasoning
+### Key Components
 
-### Azure Infrastructure for AI Agents
+#### 🤖 **Azure AI Foundry Projects Agents**
+The core orchestration layer that manages the AI agent lifecycle:
+- **Agent Creation**: Dynamically creates agents with specific instructions
+- **Tool Integration**: Configures agents with Bing Grounding capabilities
+- **Streaming Responses**: Provides real-time results as they're generated
+- **Resource Management**: Automatically cleans up agent versions after use
 
-The solution automatically provisions these Azure resources to support your AI agents:
+#### 🔍 **Bing Grounding Tool**
+Gives the AI agent access to current web information:
+- **Web Search**: Searches across the internet for relevant information
+- **Grounding**: Ensures responses are based on actual search results
+- **Citation Tracking**: Automatically captures source URLs
+- **Current Information**: Access to the latest web content
 
-#### 🌐 AI Gateway Layer
-- **Azure API Management (APIM)** - Smart routing and management for AI agent requests
-  - **Agent Authentication**: OAuth 2.0/PKCE flow for secure agent access
-  - **Tool Discovery**: Exposes MCP protocol endpoints for agent tool discovery  
-  - **Rate Limiting**: Prevents agent abuse and manages costs
-  - **Analytics**: Tracks agent usage patterns and tool popularity
+#### 🧠 **GPT-5.2-chat Model**
+The latest GPT model optimized for conversation and summarization:
+- **Advanced Understanding**: Better context comprehension
+- **Comprehensive Summaries**: Detailed, accurate summaries
+- **Citation Integration**: Incorporates sources naturally
+- **Efficient Processing**: Faster response times
 
-#### ⚡ Agent Tool Runtime  
-- **Azure Functions** - Serverless execution of MCP tools for agents
-  - **Python 3.11 Runtime**: Fast startup and execution for agent tool calls
-  - **Auto-scaling**: Handles multiple concurrent agent sessions
-  - **Custom Tools**: Easy to extend with your own agent capabilities
-  - **Integration Ready**: Connect to databases, APIs, and enterprise systems
+### Interaction Flow
 
-#### 💾 Agent Data Persistence
-- **Azure Storage Account** - Persistent storage for agent data and tool state
-  - **Blob Storage**: Store files, documents, and large data that agents can access
-  - **Tool State**: Maintain context between agent sessions
-  - **Secure Access**: Managed identity integration for secure data access
+1. **Query Submission**: User submits a search query
+2. **Agent Creation**: System creates an agent with Bing Grounding tool
+3. **Web Search**: Agent uses Bing to search for relevant information
+4. **Content Analysis**: GPT-5.2-chat analyzes search results
+5. **Summary Generation**: Agent generates comprehensive summary
+6. **Citation Extraction**: URLs are extracted and displayed
+7. **Cleanup**: Agent resources are automatically cleaned up
 
-#### 🔐 Security & Identity (Enterprise-Ready)
-- **Managed Identity**: Passwordless authentication between Azure services
-- **Entra ID Integration**: Enterprise SSO and user management
-- **Network Security**: Optional VNet isolation for sensitive agent workloads
+### Azure Infrastructure
 
-#### 📊 Agent Monitoring
-- **Application Insights**: Monitor agent tool usage, performance, and errors
-- **Log Analytics**: Detailed logging of agent interactions and tool executions
-- **Dashboards**: Track agent adoption and tool effectiveness
+The solution deploys these Azure resources:
 
-### Why This Architecture for AI Agents?
-
-**🌐 Azure API Management as AI Gateway**
-- **Agent Onboarding**: Simplified connection process for AI agents
-- **Tool Governance**: Control which tools agents can access
-- **Usage Analytics**: Understand how agents use your tools
-- **Cost Management**: Rate limiting and usage monitoring
-- **Multi-Agent Support**: Handle requests from multiple AI agents simultaneously
-
-**⚡ Azure Functions for Agent Tools**
-- **Pay-per-Use**: Only pay when agents actually use tools
-- **Instant Scaling**: Handle sudden spikes in agent activity
-- **Language Flexibility**: Write tools in Python, JavaScript, C#, Java, etc.
-- **Enterprise Integration**: Easy connections to existing systems and data
-
-**🔧 Model Context Protocol (MCP) Benefits**
-- **Standardized Interface**: Any MCP-compatible agent can use your tools
-- **Tool Discovery**: Agents automatically discover available capabilities
-- **Streaming Responses**: Real-time communication for better agent experience
-- **Extensible**: Add new tools without changing agent code
+| Resource | Purpose |
+|----------|---------|
+| **AI Foundry Hub** | Central management for AI projects |
+| **AI Foundry Project** | Development workspace for AI agents |
+| **Azure OpenAI** | Hosts GPT-5.2-chat model deployment |
+| **Bing Search API** | Provides web search grounding |
+| **Application Insights** | Monitors performance and usage |
+| **Storage Account** | Backing storage for AI Foundry |
+| **Managed Identity** | Secure authentication between services |
 
 ## Extending Your AI Agent Capabilities
 
