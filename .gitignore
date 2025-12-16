@@ -178,3 +178,4 @@ mcp_tokens.json
 .env
 *.backup
 results/
+.azure

@@ -186,7 +186,7 @@ agent = project_client.agents.create_version(
 Change the model in your `.env` file:
 
 ```env
-GPT52_CHAT_DEPLOYMENT_NAME=gpt-52-chat  # or another model
+AZURE_AI_MODEL_DEPLOYMENT_NAME=gpt-5.2-chat  # or another model
 ```
 
 ### Adjusting Search Configuration
@@ -309,26 +309,18 @@ Removes agent version after completion to manage resources.
 
 **Error: "Deployment not found"**
 - Confirm GPT-5.2-chat model is deployed
-- Check `GPT52_CHAT_DEPLOYMENT_NAME` matches deployment name
+- Check `AZURE_AI_MODEL_DEPLOYMENT_NAME` matches deployment name
 - Verify model is available in your region
 
 **Error: "Bing connection not found"**
-- Ensure Bing Search API was provisioned
-- Check `BING_CONNECTION_ID` in `.env`
-- Verify connection exists in AI Foundry portal
+- Ensure Bing Grounding was provisioned
+- Check `BING_PROJECT_CONNECTION_ID` in `.env`
+- Verify connection exists in Azure Portal under your Foundry account
 
 **Slow responses**
 - Normal for first request (cold start)
 - Subsequent requests should be faster
-- Check Application Insights for performance metrics
-
-### Monitoring
-
-View logs and metrics in Azure Portal:
-1. Navigate to your AI Foundry Project
-2. Select **Monitoring** > **Application Insights**
-3. View **Logs** for detailed traces
-4. Check **Metrics** for performance data
+- Check Azure Portal for resource metrics
 
 ## Cost Considerations
 
@@ -336,16 +328,13 @@ Estimated monthly costs (with moderate usage):
 
 | Resource | Estimated Cost |
 |----------|----------------|
-| Azure OpenAI (GPT-5.2-chat) | $50-200/month |
-| Bing Search API | $7-20/month |
-| AI Foundry Project | Free tier available |
-| Application Insights | $2-10/month |
-| Storage Account | < $1/month |
+| Azure AI Foundry (includes GPT-5.2-chat) | $50-200/month |
+| Bing Grounding API | $7-20/month |
 
 **Cost optimization tips:**
 - Monitor usage in Azure Portal
 - Set up cost alerts
-- Use appropriate model capacity (SKU)
+- Adjust model capacity in parameters if needed
 - Clean up resources when not in use: `azd down`
 
 ## Additional Resources
