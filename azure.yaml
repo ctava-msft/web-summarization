@@ -3,3 +3,10 @@
 name: bing-gpt-summarizer
 metadata:
   template: bing-gpt-summarizer@1.0.0
+
+hooks:
+  postprovision:
+    posix:
+      shell: sh
+      run: ./infra/hooks/postprovision.sh
+      continueOnError: false

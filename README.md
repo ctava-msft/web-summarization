@@ -341,7 +341,7 @@ Estimated monthly costs (with moderate usage):
 
 - **[Azure AI Foundry Documentation](https://learn.microsoft.com/azure/ai-studio/)** - Complete platform guide
 - **[Azure OpenAI Documentation](https://learn.microsoft.com/azure/ai-services/openai/)** - Model capabilities
-- **[Bing Search API Documentation](https://learn.microsoft.com/bing/search-apis/)** - Search capabilities
+- **[Bing Grounding API Reference](https://learn.microsoft.com/python/api/azure-ai-projects/azure.ai.projects.models.binggroundingagenttool)** - Bing Grounding tool capabilities
 - **[Azure AI SDK for Python](https://learn.microsoft.com/python/api/overview/azure/ai-projects-readme)** - SDK reference
 
 ## Contributing
@@ -350,4 +350,4 @@ This sample demonstrates web summarization with Azure AI Foundry. Contributions 
 
 ## License
 
-This project is licensed under the MIT License - see the LICENSE file for details.
+This project is licensed under the MIT License.
