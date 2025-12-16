@@ -1,0 +1,24 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "foundryName": {
+      "value": "mlw-foundry-2"
+    },
+    "bingName": {
+      "value": "cog-bing-foundry-2"
+    },
+    "location": {
+      "value": "eastus2"
+    },
+    "bingApiKey": {
+      "value": ""
+    },
+    "modelDeploymentName": {
+      "value": "gpt-5.2-chat"
+    },
+    "modelCapacity": {
+      "value": 110
+    }
+  }
+}
