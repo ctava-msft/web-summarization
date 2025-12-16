@@ -246,51 +246,127 @@ Resource Group
 └── Managed Identity
 ```
 
-## Next Steps: Building Your AI Agent Ecosystem
+## Code Walkthrough
 
-### 🚀 Extend Your Agent Capabilities
+### Main Components
 
-1. **Add Custom Tools**: Create tools specific to your business domain
-2. **Enterprise Integration**: Connect agents to your databases, APIs, and systems  
-3. **Multi-Agent Support**: Scale to support multiple agents with different capabilities
-4. **Advanced Analytics**: Monitor agent usage and optimize tool performance
+#### 1. Agent Creation ([query.py](query.py))
 
-### 🧠 Agent Development Patterns
-
-**Data Access Agents**: Give agents read access to enterprise data
 ```python
-# Example: Customer lookup tool for sales agents
-@app.generic_trigger(toolName="get_customer", description="Look up customer information")
-def get_customer(context):
-    # Connect to CRM, database, etc.
-    return customer_data
+agent = project_client.agents.create_version(
+    agent_name="WebResearcher",
+    definition=PromptAgentDefinition(
+        model=deployment,
+        instructions="You are a helpful research assistant...",
+        tools=[BingGroundingAgentTool(...)],
+    ),
+    description="Web research assistant with Bing grounding",
+)
 ```
 
-**Action Agents**: Let agents perform tasks and workflows
-```python  
-# Example: Ticket creation tool for support agents
-@app.generic_trigger(toolName="create_ticket", description="Create support ticket")
-def create_ticket(context):
-    # Integrate with ticketing system
-    return ticket_id
-```
+Creates an agent version with:
+- Custom instructions for research behavior
+- Bing Grounding tool configuration
+- GPT-5.2-chat model specification
 
-**Analysis Agents**: Provide agents with computational capabilities
+#### 2. Streaming Response Processing
+
 ```python
-# Example: Financial analysis tool for finance agents  
-@app.generic_trigger(toolName="calculate_roi", description="Calculate ROI for investments")
-def calculate_roi(context):
-    # Complex calculations, ML models, etc.
-    return analysis_results
+stream_response = openai_client.responses.create(
+    stream=True,
+    input=query,
+    extra_body={"agent": {"name": agent.name, "type": "agent_reference"}},
+)
+
+for event in stream_response:
+    if event.type == "response.output_text.delta":
+        print(event.delta, end="", flush=True)
 ```
 
-### 📚 Additional Resources
+Processes events in real-time:
+- `response.created` - Response initialized
+- `response.output_text.delta` - Incremental text chunks
+- `response.output_text.done` - Text generation complete
+- `response.output_item.done` - Extract citations
 
-- **[TESTING.md](TESTING.md)** - Complete testing and validation guide
-- **[MCP Specification](https://modelcontextprotocol.io/)** - Official Model Context Protocol documentation
-- **[Azure AI Gateway](https://github.com/Azure-Samples/AI-Gateway)** - Learn more about AI Gateway patterns
-- **[Sequence Diagrams](infra/app/apim-oauth/diagrams/diagrams.md)** - Detailed interaction flows
+#### 3. Citation Extraction
 
-### 🤝 Contributing
+```python
+if annotation.type == "url_citation":
+    citations.append(f"  - {annotation.url}")
+```
 
-This is an experimental sample showing AI agent integration patterns. Contributions and feedback are welcome as we explore the future of AI agent development with Azure and MCP.
+Automatically captures source URLs from search results.
+
+#### 4. Resource Cleanup
+
+```python
+project_client.agents.delete_version(agent.name, agent.version)
+```
+
+Removes agent version after completion to manage resources.
+
+## Troubleshooting
+
+### Common Issues
+
+**Error: "Project endpoint not found"**
+- Ensure `azd up` completed successfully
+- Check `.env` file has `AZURE_AI_PROJECT_ENDPOINT` set
+- Verify you're authenticated: `az login`
+
+**Error: "Deployment not found"**
+- Confirm GPT-5.2-chat model is deployed
+- Check `GPT52_CHAT_DEPLOYMENT_NAME` matches deployment name
+- Verify model is available in your region
+
+**Error: "Bing connection not found"**
+- Ensure Bing Search API was provisioned
+- Check `BING_CONNECTION_ID` in `.env`
+- Verify connection exists in AI Foundry portal
+
+**Slow responses**
+- Normal for first request (cold start)
+- Subsequent requests should be faster
+- Check Application Insights for performance metrics
+
+### Monitoring
+
+View logs and metrics in Azure Portal:
+1. Navigate to your AI Foundry Project
+2. Select **Monitoring** > **Application Insights**
+3. View **Logs** for detailed traces
+4. Check **Metrics** for performance data
+
+## Cost Considerations
+
+Estimated monthly costs (with moderate usage):
+
+| Resource | Estimated Cost |
+|----------|----------------|
+| Azure OpenAI (GPT-5.2-chat) | $50-200/month |
+| Bing Search API | $7-20/month |
+| AI Foundry Project | Free tier available |
+| Application Insights | $2-10/month |
+| Storage Account | < $1/month |
+
+**Cost optimization tips:**
+- Monitor usage in Azure Portal
+- Set up cost alerts
+- Use appropriate model capacity (SKU)
+- Clean up resources when not in use: `azd down`
+
+## Additional Resources
+
+- **[Azure AI Foundry Documentation](https://learn.microsoft.com/azure/ai-studio/)** - Complete platform guide
+- **[Azure OpenAI Documentation](https://learn.microsoft.com/azure/ai-services/openai/)** - Model capabilities
+- **[Bing Search API Documentation](https://learn.microsoft.com/bing/search-apis/)** - Search capabilities
+- **[Azure AI SDK for Python](https://learn.microsoft.com/python/api/overview/azure/ai-projects-readme)** - SDK reference
+
+## Contributing
+
+This sample demonstrates web summarization with Azure AI Foundry. Contributions and feedback are welcome!
+
+## License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
