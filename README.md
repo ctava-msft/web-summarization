@@ -167,109 +167,84 @@ The solution deploys these Azure resources:
 | **Storage Account** | Backing storage for AI Foundry |
 | **Managed Identity** | Secure authentication between services |
 
-## Extending Your AI Agent Capabilities
+## Customization
 
-### Adding Custom Tools for Your Agents
+### Modifying the Agent Instructions
 
-The solution is designed for easy extension. Here's how to add your own agent tools:
-
-#### 1. Create a New Tool Function
-
-Add a new function to `src/function_app.py`:
+Edit the agent instructions in [query.py](query.py) to change how the agent behaves:
 
 ```python
-@app.generic_trigger(
-    arg_name="context",
-    type="mcpToolTrigger", 
-    toolName="get_weather",
-    description="Get current weather for a location",
-    toolProperties='[{"propertyName": "location", "propertyType": "string", "description": "City name"}]',
+agent = project_client.agents.create_version(
+    agent_name="WebResearcher",
+    definition=PromptAgentDefinition(
+        model=deployment,
+        instructions="You are a helpful research assistant. Use Bing search to find current information and provide a comprehensive summary.",
+        # Customize instructions here
+        tools=[...],
+    ),
+    ...
 )
-def get_weather(context) -> str:
-    """Get weather data for AI agents"""
-    args = json.loads(context)["arguments"]
-    location = args.get("location", "Seattle")
-    
-    # Your weather API integration here
-    weather_data = call_weather_api(location)
-    
-    return f"Weather in {location}: {weather_data}"
 ```
 
-#### 2. Deploy and Test
+### Using Different Models
 
-```bash
-# Deploy your new tool
-azd deploy
+Change the model in your `.env` file:
 
-# Test with agents
-python test_mcp_fixed_session.py
+```env
+GPT52_CHAT_DEPLOYMENT_NAME=gpt-52-chat  # or another model
 ```
 
-Your AI agents will automatically discover and can use your new `get_weather` tool!
+### Adjusting Search Configuration
 
-### Common Agent Tool Patterns
+Modify the Bing Grounding configuration in [query.py](query.py):
 
-| Tool Type           | Example                                  | Agent Use Case                  |
-|---------------------|------------------------------------------|---------------------------------|
-| **Data Retrieval**  | `get_customer_info`, `search_documents`  | Agents access enterprise data   |
-| **Actions**         | `send_email`, `create_ticket`            | Agents perform tasks            |
-| **Calculations**    | `calculate_roi`, `forecast_sales`        | Agents do complex math          |
-| **External APIs**   | `get_weather`, `translate_text`          | Agents use third-party services |
+```python
+BingGroundingAgentTool(
+    bing_grounding=BingGroundingSearchToolParameters(
+        search_configurations=[
+            BingGroundingSearchConfiguration(
+                project_connection_id=bing_conn_id
+                # Additional search parameters
+            )
+        ]
+    )
+)
+```
 
-## Technical Implementation Details
+## Configuration
 
-### API Management Configuration for AI Agents
+### Environment Variables
 
-The APIM instance exposes two key APIs for AI agent interaction:
+After running `azd up`, your `.env` file will be populated with:
 
-#### 🔐 Agent Authentication API (`/oauth/*`)
+| Variable | Description |
+|----------|-------------|
+| `AI_PROJECT_NAME` | Azure AI Foundry project name |
+| `AZURE_LOCATION` | Azure region for deployment |
+| `AZURE_SUBSCRIPTION_ID` | Your Azure subscription |
+| `AZURE_RESOURCE_GROUP` | Resource group name |
+| `GPT52_CHAT_DEPLOYMENT_NAME` | GPT model deployment name |
+| `BING_CONNECTION_ID` | Bing Search connection ID |
+| `BING_CONNECTION_API_KEY` | Bing Search API key |
 
-Handles secure agent authentication and authorization:
+### Azure Resources
 
-**Key Endpoints for Agent Authentication:**
-- `GET /authorize` - Initiates agent authentication flow
-- `POST /token` - Exchanges authorization codes for agent access tokens  
-- `POST /register` - Dynamic client registration for new agents
-- `GET /.well-known/oauth-authorization-server` - Agent discovery of auth capabilities
+The deployment creates these resources in your subscription:
 
-#### 🤖 Agent Tool API (`/mcp/*`)
-
-The core MCP protocol endpoints that agents use to interact with your tools:
-
-**Agent Session Endpoint** (`GET /sse`)
-- Establishes persistent connection between agent and your MCP server
-- Enables real-time streaming responses for better agent experience
-- Handles multiple concurrent agent sessions
-
-**Agent Tool Interaction** (`POST /message`)  
-- `tools/list` - Agent discovers available tools and their capabilities
-- `tools/call` - Agent executes specific tools with parameters
-- Real-time responses streamed back to agent via SSE connection
-
-### Enterprise Security for AI Agents
-
-The solution includes comprehensive security without compromising agent experience:
-
-**🔐 Agent Authentication**
-- OAuth 2.0/PKCE flow ensures only authorized agents can access tools
-- Enterprise SSO integration via Entra ID
-- Support for multiple agent types and use cases
-
-**🛡️ Tool Access Control**  
-- Fine-grained permissions for different agent capabilities
-- Rate limiting to prevent agent abuse
-- Audit logging of all agent tool interactions
-
-**🔒 Data Protection**
-- Encrypted communication between agents and tools
-- Secure storage of agent data and tool state
-- Network isolation options for sensitive workloads
-
-**📊 Monitoring & Compliance**
-- Complete audit trail of agent activities
-- Performance monitoring and alerting
-- Usage analytics for governance and optimization
+```
+Resource Group
+├── AI Foundry Hub
+├── AI Foundry Project
+│   ├── OpenAI Connection
+│   └── Bing Grounding Connection
+├── Azure OpenAI Account
+│   └── GPT-5.2-chat Deployment
+├── Bing Search API
+├── Application Insights
+├── Log Analytics Workspace
+├── Storage Account
+└── Managed Identity
+```
 
 ## Next Steps: Building Your AI Agent Ecosystem
 
