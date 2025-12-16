@@ -49,14 +49,12 @@ module foundry './core/ai/foundry.bicep' = {
   }
 }
 
-// App outputs
+// App outputs (names match .env variables expected by query.py)
 output AZURE_AI_PROJECT_ENDPOINT string = foundry.outputs.projectEndpoint
-output AI_PROJECT_NAME string = 'proj-default'
+output AI_PROJECT_NAME string = foundry.outputs.foundryAccountName
 output AZURE_LOCATION string = location
 output AZURE_RESOURCE_GROUP string = rg.name
 output AZURE_TENANT_ID string = tenant().tenantId
-output FOUNDRY_ACCOUNT_NAME string = foundry.outputs.foundryAccountName
-output FOUNDRY_ENDPOINT string = foundry.outputs.foundryEndpoint
-output MODEL_DEPLOYMENT_NAME string = foundry.outputs.modelDeploymentName
-output BING_CONNECTION_ID string = foundry.outputs.bingConnectionId
+output AZURE_AI_MODEL_DEPLOYMENT_NAME string = foundry.outputs.modelDeploymentName
+output BING_PROJECT_CONNECTION_ID string = foundry.outputs.bingConnectionId
 output BING_CONNECTION_NAME string = foundry.outputs.bingConnectionName
