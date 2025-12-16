@@ -5,23 +5,19 @@ param foundryName string
 param bingName string
 
 @description('Location for all resources')
-param location string = 'eastus2'
-
-@description('API key for Bing Grounding')
-@secure()
-param bingApiKey string
+param location string
 
 @description('Model deployment name')
-param modelDeploymentName string = 'gpt-5.2-chat'
+param modelDeploymentName string
 
 @description('Model name')
-param modelName string = 'gpt-5.2-chat'
+param modelName string
 
 @description('Model version')
-param modelVersion string = '2025-12-11'
+param modelVersion string
 
 @description('Model capacity')
-param modelCapacity int = 110
+param modelCapacity int
 
 // Create Bing Grounding resource
 resource bingGrounding 'Microsoft.Bing/accounts@2020-06-10' = {
@@ -118,7 +114,7 @@ resource bingConnection 'Microsoft.CognitiveServices/accounts/projects/connectio
     category: 'ApiKey'
     target: 'https://api.bing.microsoft.com/'
     credentials: {
-      key: bingApiKey
+      key: listKeys(bingGrounding.id, bingGrounding.apiVersion).key1
     }
     useWorkspaceManagedIdentity: false
     isSharedToAll: false

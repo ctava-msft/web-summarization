@@ -55,12 +55,10 @@ azd up
 ```
 
 This provisions:
-- 🤖 **Azure AI Foundry Project** - AI development environment
-- 🧠 **Azure OpenAI** - GPT-5.2-chat model deployment
-- 🔍 **Bing Search API** - Web grounding capabilities
-- 📊 **Monitoring** - Application Insights and Log Analytics
-- 💾 **Storage** - Backing storage for AI Foundry
-- 🔐 **Identity** - Managed identity for secure access
+- 🤖 **Azure AI Foundry** - Unified AI Services account with built-in project
+- 🧠 **GPT-5.2-chat Model** - Latest GPT model deployment
+- 🔍 **Bing Grounding** - Web search capabilities with automatic connection
+- 🎯 **Agents Capability** - Built-in agents runtime for AI orchestration
 
 ### 2. Install Python Dependencies
 
@@ -122,8 +120,8 @@ graph LR
 
 ### Key Components
 
-#### 🤖 **Azure AI Foundry Projects Agents**
-The core orchestration layer that manages the AI agent lifecycle:
+#### 🤖 **Azure AI Foundry Agents**
+The core orchestration layer built into Azure AI Foundry:
 - **Agent Creation**: Dynamically creates agents with specific instructions
 - **Tool Integration**: Configures agents with Bing Grounding capabilities
 - **Streaming Responses**: Provides real-time results as they're generated
@@ -159,13 +157,10 @@ The solution deploys these Azure resources:
 
 | Resource | Purpose |
 |----------|---------|
-| **AI Foundry Hub** | Central management for AI projects |
-| **AI Foundry Project** | Development workspace for AI agents |
-| **Azure OpenAI** | Hosts GPT-5.2-chat model deployment |
-| **Bing Search API** | Provides web search grounding |
-| **Application Insights** | Monitors performance and usage |
-| **Storage Account** | Backing storage for AI Foundry |
-| **Managed Identity** | Secure authentication between services |
+| **Azure AI Foundry** | Unified AI Services account with built-in project |
+| **GPT-5.2-chat Deployment** | Latest GPT model for summarization |
+| **Bing Grounding** | Web search API with project-level connection |
+| **Agents Capability** | Built-in agents runtime for orchestration |
 
 ## Customization
 
@@ -219,12 +214,14 @@ After running `azd up`, your `.env` file will be populated with:
 
 | Variable | Description |
 |----------|-------------|
-| `AI_PROJECT_NAME` | Azure AI Foundry project name |
+| `AI_PROJECT_NAME` | Azure AI Foundry account name |
 | `AZURE_LOCATION` | Azure region for deployment |
-| `AZURE_SUBSCRIPTION_ID` | Your Azure subscription |
+| `AZURE_SUBSCRIPTION_ID` | Your Azure subscription ID |
 | `AZURE_RESOURCE_GROUP` | Resource group name |
-| `GPT52_CHAT_DEPLOYMENT_NAME` | GPT model deployment name |
-| `BING_CONNECTION_ID` | Bing Search connection ID |
+| `AZURE_AI_PROJECT_ENDPOINT` | Project endpoint URL for API access |
+| `AZURE_AI_MODEL_DEPLOYMENT_NAME` | GPT model deployment name |
+| `BING_PROJECT_CONNECTION_ID` | Full resource ID for Bing connection |
+| `BING_CONNECTION_NAME` | Bing connection name |
 | `BING_CONNECTION_API_KEY` | Bing Search API key |
 
 ### Azure Resources
@@ -233,17 +230,12 @@ The deployment creates these resources in your subscription:
 
 ```
 Resource Group
-├── AI Foundry Hub
-├── AI Foundry Project
-│   ├── OpenAI Connection
-│   └── Bing Grounding Connection
-├── Azure OpenAI Account
-│   └── GPT-5.2-chat Deployment
-├── Bing Search API
-├── Application Insights
-├── Log Analytics Workspace
-├── Storage Account
-└── Managed Identity
+└── Azure AI Foundry (AIServices)
+    ├── Default Project (proj-default)
+    │   └── Bing Grounding Connection
+    ├── GPT-5.2-chat Deployment
+    ├── Agents Capability Host
+    └── Bing Grounding API
 ```
 
 ## Code Walkthrough

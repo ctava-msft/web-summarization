@@ -8,20 +8,23 @@
     "location": {
       "value": "${AZURE_LOCATION}"
     },
-    "vnetEnabled": {
-      "value": "${VNET_ENABLED=true}"
+    "foundryName": {
+      "value": "${FOUNDRY_NAME=}"
     },
-    "apimSku": {
-      "value": "Basicv2" 
+    "bingName": {
+      "value": "${BING_NAME=}"
     },
-    "mcpEntraApplicationDisplayName": {
-      "value": "MCP-OAuth-App"
+    "modelDeploymentName": {
+      "value": "${MODEL_DEPLOYMENT_NAME=}"
     },
-    "mcpEntraApplicationUniqueName": {
-      "value": "mcp-oauth-app-${AZURE_ENV_NAME}"
+    "modelName": {
+      "value": "${MODEL_NAME=}"
     },
-    "existingEntraAppId": {
-      "value": "6441e54f-8149-487b-aac4-3a55a049a362"
+    "modelVersion": {
+      "value": "${MODEL_VERSION=}"
+    },
+    "modelCapacity": {
+      "value": "${MODEL_CAPACITY=0}"
     }
   }
 }
